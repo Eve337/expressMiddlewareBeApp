@@ -40,4 +40,8 @@ export const postsRepository = {
 
     return entityToUpdate;
   },
+  deleteAll() {
+    db.posts = []
+    return;
+  }
 }

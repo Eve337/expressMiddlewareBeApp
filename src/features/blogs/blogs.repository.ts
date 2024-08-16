@@ -45,4 +45,8 @@ export const blogsRepository = {
       }
       return blogForOutput
   },
+  deleteAll(){
+    db.blogs = [];
+    return;
+  }
 }
