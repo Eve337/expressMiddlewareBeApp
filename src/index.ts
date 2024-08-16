@@ -1,8 +1,5 @@
 import express from 'express';
 import cors from "cors";
-import { blogsRouter } from './features/blogs';
-import { routes } from './constants';
-import { postsRouter } from './features/posts';
 
 export const app = express()
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
@@ -19,4 +16,5 @@ app.listen(PORT, () => {
 
 
 // app.use(routes.BLOGS, blogsRouter);
+// app.use(routes.POSTS, postsRouter);
 // app.use(routes.POSTS, postsRouter);
