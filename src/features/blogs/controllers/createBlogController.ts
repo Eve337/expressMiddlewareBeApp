@@ -7,7 +7,7 @@ export const createBlogController = (req: Request<any, any, BlogInputModel>, res
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         // in case request params meet the validation criteria
-        return res.status(400).json({ errorsMessages: errors.array() })
+        return res.status(400).json({ errorsMessages: errors.array() } )
     };
     const newBlogId = blogsRepository.create(req.body)
     const newBlog = blogsRepository.findAndMap(newBlogId)
