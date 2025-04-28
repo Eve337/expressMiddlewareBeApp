@@ -7,8 +7,14 @@ import { mapToBlogViewModel } from '../../../utils/mappers'
 export const createBlogController = async (req: Request<any, any, BlogInputModel>, res: Response) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        // in case request params meet the validation criteria
-        return res.status(400).json({ errorsMessages: errors.array() } )
+        const formattedErrors = errors.array().map(error => {
+            const errorObj = error as any;
+            return {
+                message: errorObj.msg.message || errorObj.msg,
+                field: errorObj.msg.field || errorObj.path
+            }
+        })
+        return res.status(400).json({ errorsMessages: formattedErrors } )
     };
     const newBlogId = await blogsRepository.create(req.body)
     const newBlog = await blogsRepository.findAndMap(String(newBlogId._id))
