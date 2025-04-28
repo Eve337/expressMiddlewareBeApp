@@ -3,7 +3,7 @@ import { body } from "express-validator";
 import { adminMiddleware } from "../../../middlewares/auth.middleware";
 import { blogsRepository } from "../blogs.repository";
 
-export const nameValidator = body('name').isString().withMessage(() => ({ field: 'name', message: 'not string' })).isString().bail()
+export const nameValidator = body('name').isString().withMessage(() => ({ field: 'name', message: 'not string' })).bail()
     .trim().isLength({min: 1, max: 15}).withMessage(() => ({ field: 'name', message: 'more then 15 or 0' }))
 export const descriptionValidator = body('description').isString().withMessage(() => ({ field: 'description', message: 'not string' })).bail()
     .trim().isLength({min: 1, max: 500}).withMessage(() => ({ field: 'description', message: 'more then 500 or 0' }))
