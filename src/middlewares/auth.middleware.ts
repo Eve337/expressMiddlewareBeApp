@@ -13,7 +13,6 @@ export const fromUTF8ToBase64 = (code: string) => {
 
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers['authorization'] as string // 'Basic xxxx'
-    // console.log(auth)
     if (!auth) {
         res
             .status(401)
@@ -29,8 +28,6 @@ export const adminMiddleware = (req: Request, res: Response, next: NextFunction)
 
     // const decodedAuth = fromBase64ToUTF8(auth.slice(6))
     const codedAuth = fromUTF8ToBase64('admin:qwerty')
-
-    console.log(codedAuth, auth)
 
     // if (decodedAuth !== SETTINGS.ADMIN) {
     if (auth.slice(6) !== codedAuth) {
