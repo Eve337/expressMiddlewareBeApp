@@ -5,7 +5,8 @@ export interface PostInputModel {
   blogId: string
 }
 
-export interface PostViewModel {
+export interface PostViewModel {  
+  id: string,
   title: string,
   shortDescription: string,
   content: string,

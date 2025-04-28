@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { SETTINGS } from "../settings/settings"
 import { CollectionNames } from "../constants"
 import { BlogViewModel, PostViewModel } from "../models"
+import { BlogDbType, PostDbType } from "../db"
 
 dotenv.config();
 if (!process.env.MONGO_URL) {
@@ -16,8 +17,8 @@ console.log(mongoURI)
 const client = new MongoClient(mongoURI);
 export const db = client.db(SETTINGS.DB_NAME);
 
-export const blogsCollection = db.collection<BlogViewModel>(CollectionNames.BLOGS);
-export const postsCollection = db.collection<PostViewModel>(CollectionNames.POSTS);
+export const blogsCollection = db.collection<BlogDbType>(CollectionNames.BLOGS);
+export const postsCollection = db.collection<PostDbType>(CollectionNames.POSTS);
 
 export const runDB = async () => {
     try {

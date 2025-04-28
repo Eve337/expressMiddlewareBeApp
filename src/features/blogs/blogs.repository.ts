@@ -4,22 +4,22 @@ import { blogsCollection } from "../../utils/db"
 import { ObjectId, WithId } from 'mongodb';
 
 export const blogsRepository = {
-  async create(blog: BlogInputModel): Promise<WithId<BlogViewModel>> {
+  async create(blog: BlogInputModel): Promise<WithId<BlogDbType>> {
     const newBlog: BlogDbType = {
         name: blog.name,
         description: blog.description,
         websiteUrl: blog.websiteUrl, 
         createdAt: new Date().toISOString(),
-        isMembership: true,
+        isMembership: false,
     }
     const blogEntity = await blogsCollection.insertOne(newBlog)
 
     return { ...newBlog, _id: blogEntity.insertedId }
   },
-  async findOne(id: string): Promise<WithId<BlogViewModel> | null> {
+  async findOne(id: string): Promise<WithId<BlogDbType> | null> {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
-  async findAndMap(id: string): Promise<WithId<BlogViewModel> | null> {
+  async findAndMap(id: string): Promise<WithId<BlogDbType> | null> {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
   async getAll() {
