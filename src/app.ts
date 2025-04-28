@@ -4,6 +4,7 @@ import { routes } from './constants';
 import { blogsRouter } from './features/blogs';
 import { postsRouter } from './features/posts';
 import { testDataRouter } from './features/testingDataRouter';
+import { errorHandler } from './middlewares/error.middleware';
 
 export const app = express()
 
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
   res.status(200).json({version: '1.0'});
 });
 
-
 app.use(routes.BLOGS, blogsRouter);
 app.use(routes.POSTS, postsRouter);
 app.use(routes.TESTING, testDataRouter);
+app.use(errorHandler);

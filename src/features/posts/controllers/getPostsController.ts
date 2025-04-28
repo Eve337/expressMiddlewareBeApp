@@ -1,8 +1,9 @@
 import {Request, Response} from 'express'
 import {postsRepository} from '../posts.repository'
-import { BlogViewModel } from '../../../models';
+import { PostViewModel } from '../../../models';
 
-export const getPostsController = (req: Request, res: Response<BlogViewModel[]>) => {
-  res.status(200).json(postsRepository.getAll());
+export const getPostsController = async (req: Request, res: Response<PostViewModel[]>) => {
+  const posts = await postsRepository.getAll()
+  res.status(200).json(posts);
   return;
 }

@@ -14,7 +14,7 @@ export const blogIdValidator = body('blogId').isString().withMessage(() => ({ fi
     .trim().isLength({min: 1, max: 100}).withMessage(() => ({ field: 'blogId', message: 'more then 100 or 0' }))
 
 export const findBlogIdValidator = (req: Request<any, any, { blogId: string }>, res: Response, next: NextFunction) => {
-    const blogId = blogsRepository.find(req.body.blogId);
+    const blogId = blogsRepository.findOne(req.body.blogId);
     if (!blogId) {
         res.status(404).send('Entity not found');
         return;

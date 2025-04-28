@@ -11,8 +11,8 @@ export const websiteUrlValidator = body('websiteUrl').isString().withMessage(() 
     .trim().isURL().withMessage(() => ({ field: 'websiteUrl', message: 'not url' }))
     .isLength({min: 1, max: 100}).withMessage(() => ({ field: 'websiteUrl', message: 'more then 100 or 0' }))
 
-export const findBlogValidator = (req: Request, res: Response, next: NextFunction) => {
-    const blogId = blogsRepository.find(req.params.id);
+export const findBlogValidator = async (req: Request, res: Response, next: NextFunction) => {
+    const blogId = await blogsRepository.findOne(req.params.id);
     if (!blogId) {
         res.status(404).send('Entity not found');
         return;

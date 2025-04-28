@@ -1,5 +1,4 @@
 export type PostDbType = {
-  id: string
   title: string // max 30
   shortDescription: string // max 100
   content: string // max 1000
@@ -8,10 +7,11 @@ export type PostDbType = {
 }
 
 export type BlogDbType = {
-  id: string
   name: string // max 15
   description: string // max 500
   websiteUrl: string // max 100 ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
+  createdAt: string
+  isMembership: boolean
 }
 
 export type DBType = { // типизация базы данных (что мы будем в ней хранить)

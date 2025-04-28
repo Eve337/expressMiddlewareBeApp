@@ -1,47 +1,49 @@
+import { ObjectId } from "mongodb";
 import { PostDbType, db } from "../../db"
 import { PostInputModel, PostViewModel } from "../../models"
-import { blogsRepository } from "../blogs/blogs.repository";
+import { blogsCollection, postsCollection } from "../../utils/db";
 
 export const postsRepository = {
-  create(post: PostInputModel) {
-    const blog = blogsRepository.find(post.blogId)!;
+  async create(post: PostInputModel) {
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(post.blogId)});
+    if(!blog) return null;
     const newPost: PostDbType = {
-        id: new Date().toISOString() + Math.random(),
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
-        blogId: blog.id,
-        blogName: blog.name,
+        blogId: String(blog._id),
+        blogName: blog?.name,
     }
-    db.posts = [...db.posts, newPost]
-    return newPost;
+    const postDbEntity = await postsCollection.insertOne(newPost);
+    return { ...newPost, _id: postDbEntity.insertedId };
   },
-  find(id: string) {
-      return db.posts.find(b => b.id === id)
+  async find(id: string) {
+      return postsCollection.findOne({ _id: new ObjectId(id)});
   },
-  getAll() {
-    return db.blogs;
+  async getAll() {
+    return postsCollection.find().toArray();
   },
-  del(id: string) {
-    const entityToDelete = this.find(id);
-    if (entityToDelete) {
-      db.posts = db.posts.filter((current) => current.id !== entityToDelete.id);
+  async del(id: string) {
+    return postsCollection.deleteOne({ _id: new ObjectId(id)});
+  },
+  async put(post: PostInputModel, id: string) {
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(post.blogId)})!;
+
+    const newEntity = await postsCollection.updateOne({_id: new ObjectId(id)}, {
+      $set: {
+        blogId: String(blog?._id) || '',
+        content: post.content,
+        shortDescription: post.shortDescription,
+        blogName: blog?.name || '',
+      }
+    })
+
+    if (newEntity.modifiedCount < 1) {
+      throw new Error();
     }
     return;
-  },
-  put(post: PostInputModel, id: string) {
-    const entityToUpdate = this.find(id)!;
-    const blog = blogsRepository.find(post.blogId)!;
-
-    entityToUpdate.blogId = post.blogId;
-    entityToUpdate.content = post.content;
-    entityToUpdate.shortDescription = post.shortDescription;
-    entityToUpdate.blogName = blog.name;
-
-    return entityToUpdate;
   },
   deleteAll() {
-    db.posts = []
-    return;
+    postsCollection.deleteMany();
   }
 }

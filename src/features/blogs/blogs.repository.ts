@@ -1,52 +1,51 @@
 import { BlogDbType, db } from "../../db"
 import { BlogInputModel, BlogViewModel } from "../../models"
+import { blogsCollection } from "../../utils/db"
+import { ObjectId, WithId } from 'mongodb';
 
 export const blogsRepository = {
-  create(blog: BlogInputModel) {
+  async create(blog: BlogInputModel): Promise<WithId<BlogViewModel>> {
     const newBlog: BlogDbType = {
-        id: new Date().toISOString() + Math.random(),
         name: blog.name,
         description: blog.description,
-        websiteUrl: blog.websiteUrl,
+        websiteUrl: blog.websiteUrl, 
+        createdAt: new Date().toISOString(),
+        isMembership: true,
     }
-    db.blogs = [...db.blogs, newBlog]
-    return newBlog.id
+    const blogEntity = await blogsCollection.insertOne(newBlog)
+
+    return { ...newBlog, _id: blogEntity.insertedId }
   },
-  find(id: string) {
-      return db.blogs.find(b => b.id === id)
+  async findOne(id: string): Promise<WithId<BlogViewModel> | null> {
+    return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
-  findAndMap(id: string) {
-      const blog = this.find(id)!
-      return this.map(blog)
+  async findAndMap(id: string): Promise<WithId<BlogViewModel> | null> {
+    return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
-  getAll() {
-    return db.blogs;
+  async getAll() {
+    return blogsCollection.find().toArray();
   },
-  del(id: string) {
-    const entityToDelete = this.find(id);
-    if (entityToDelete) {
-      db.blogs = db.blogs.filter((current) => current.id !== entityToDelete.id);
-    }
-    return;
+  async del(id: string) {
+    return blogsCollection.deleteOne({ _id: new ObjectId(id) });
   },
-  put(blog: BlogInputModel, id: string) {
-    const entity = this.find(id)!;
-    entity.name = blog.name;
-    entity.description = blog.description;
-    entity.websiteUrl = blog.websiteUrl;
-    return entity;
-  },
-  map(blog: BlogDbType) {
-      const blogForOutput: BlogViewModel = {
-          id: blog.id,
+  async put(blog: BlogInputModel, id: string) {
+    const entity = await blogsCollection.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          name: blog.name,
           description: blog.description,
           websiteUrl: blog.websiteUrl,
-          name: blog.name,
+        }
       }
-      return blogForOutput
-  },
-  deleteAll(){
-    db.blogs = [];
+    );
+    if (entity.matchedCount < 1) {
+      throw new Error('Driver not exist');
+    }
     return;
+  },
+
+  async deleteAll(){
+    return blogsCollection.deleteMany();
   }
 }
