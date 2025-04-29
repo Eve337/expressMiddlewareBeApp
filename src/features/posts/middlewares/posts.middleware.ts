@@ -14,6 +14,7 @@ export const blogIdValidator = body('blogId').isString().withMessage(() => ({ fi
     .trim().isLength({min: 1, max: 100}).withMessage(() => ({ field: 'blogId', message: 'more then 100 or 0' }))
 
 export const findBlogIdValidator = (req: Request<any, any, { blogId: string }>, res: Response, next: NextFunction) => {
+    console.log(req.body.blogId);
     const blogId = blogsRepository.findOne(req.body.blogId);
     if (!blogId) {
         res.status(404).send('Entity not found');
@@ -24,6 +25,7 @@ export const findBlogIdValidator = (req: Request<any, any, { blogId: string }>, 
 
 export const findPostValidator = async (req: Request, res: Response, next: NextFunction) => {
   const postId = await postsRepository.find(req.params.id);
+  console.log(postId);
   if (!postId) {
       res.status(404).send('Entity not found');
       return;
@@ -33,7 +35,6 @@ export const findPostValidator = async (req: Request, res: Response, next: NextF
 
 export const postValidators = [
   adminMiddleware,
-  findPostValidator,
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
