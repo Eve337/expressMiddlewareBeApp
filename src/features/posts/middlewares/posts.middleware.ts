@@ -22,8 +22,8 @@ export const findBlogIdValidator = (req: Request<any, any, { blogId: string }>, 
     next();
 };
 
-export const findPostValidator = (req: Request, res: Response, next: NextFunction) => {
-  const postId = postsRepository.find(req.params.id);
+export const findPostValidator = async (req: Request, res: Response, next: NextFunction) => {
+  const postId = await postsRepository.find(req.params.id);
   if (!postId) {
       res.status(404).send('Entity not found');
       return;

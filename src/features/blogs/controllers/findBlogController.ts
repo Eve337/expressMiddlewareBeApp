@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import { Request, Response } from 'express'
 import { BlogViewModel } from '../../../models'
 import { blogsRepository } from '../blogs.repository';
 import { mapToBlogViewModel } from '../../../utils/mappers';

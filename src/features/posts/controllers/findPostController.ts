@@ -6,9 +6,8 @@ import { mapToPostViewModel } from '../../../utils/mappers';
 export const findPostController = async (req: Request<{id: string}>, res: Response<PostViewModel>) => {
   const entity = await postsRepository.find(req.params.id);
   if (!entity) {
-    res.status(404)
-    return;
+    return res.status(404);
   }
   res.status(200).json(mapToPostViewModel(entity));
   return;
-}
+};

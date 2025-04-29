@@ -5,7 +5,7 @@ import { validationResult } from 'express-validator'
 import { mapToBlogViewModel } from '../../../utils/mappers'
 
 export const createBlogController = async (req: Request<any, any, BlogInputModel>, res: Response) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const formattedErrors = errors.array().map(error => {
             const errorObj = error as any;
