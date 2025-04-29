@@ -7,9 +7,15 @@ import { validationResult } from 'express-validator';
 export const putPostController = (req: Request<{id: string}, any, PostInputModel>, res: Response) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    // in case request params meet the validation criteria
-    return res.status(400).json({ errors: errors.array() } as BasicErrorResponse)
-  };
+    const formattedErrors = errors.array().map(error => {
+        const errorObj = error as any;
+        return {
+            message: errorObj.msg.message || errorObj.msg,
+            field: errorObj.msg.field || errorObj.path
+        }
+    })
+    return res.status(400).json({ errorsMessages: formattedErrors } )
+};
 
   const updatedEntity = postsRepository.put(req.body, req.params.id);
   res.status(204).json(updatedEntity);

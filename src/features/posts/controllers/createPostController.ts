@@ -7,8 +7,14 @@ import { mapToPostViewModel } from '../../../utils/mappers'
 export const createPostController = async (req: Request<any, any, PostInputModel>, res: Response) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        // in case request params meet the validation criteria
-        return res.status(400).json({ errorsMessages: errors.array() })
+        const formattedErrors = errors.array().map(error => {
+            const errorObj = error as any;
+            return {
+                message: errorObj.msg.message || errorObj.msg,
+                field: errorObj.msg.field || errorObj.path
+            }
+        })
+        return res.status(400).json({ errorsMessages: formattedErrors } )
     };
     const newPost = await postsRepository.create(req.body);
     if (!newPost) {
