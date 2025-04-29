@@ -13,6 +13,7 @@ export const postsRepository = {
         content: post.content,
         blogId: String(blog._id),
         blogName: blog?.name,
+        createdAt: new Date().toISOString(),
     }
     const postDbEntity = await postsCollection.insertOne(newPost);
     console.log(postDbEntity.insertedId);
@@ -36,6 +37,7 @@ export const postsRepository = {
         content: post.content,
         shortDescription: post.shortDescription,
         blogName: blog?.name || '',
+        title: post.title,
       }
     })
 
