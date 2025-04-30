@@ -18,6 +18,7 @@ export function mapToPostViewModel(post: WithId<PostDbType>): PostViewModel {
     id: post._id.toString(),
     title: post.title,
     shortDescription: post.shortDescription,
+    createdAt: post.createdAt,
     content: post.content,
     blogId: post.blogId,
     blogName: post.blogName,
