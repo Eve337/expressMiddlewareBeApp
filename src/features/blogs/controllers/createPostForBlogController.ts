@@ -1,10 +1,11 @@
 import { Response, Request } from 'express'
 import { blogsRepository } from '../blogs.repository'
-import { BlogInputModel } from '../../../models'
+import { BlogInputModel, PostInputModel } from '../../../models'
 import { validationResult } from 'express-validator'
-import { mapToBlogViewModel } from '../../../utils/mappers'
+import { mapToBlogViewModel, mapToPostViewModel } from '../../../utils/mappers'
+import { postsRepository } from '../../posts/posts.repository'
 
-export const createBlogController = async (req: Request<any, any, BlogInputModel>, res: Response) => {
+export const createPostForBlogController = async (req: Request<{id: string}, any, Omit<PostInputModel, 'blogId'>>, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const formattedErrors = errors.array().map(error => {
@@ -16,12 +17,11 @@ export const createBlogController = async (req: Request<any, any, BlogInputModel
         })
         return res.status(400).json({ errorsMessages: formattedErrors } )
     };
-    const newBlogId = await blogsRepository.create(req.body)
-    const newBlog = await blogsRepository.findAndMap(String(newBlogId._id))
-    if (!newBlog) {
+    const newPost = await postsRepository.create({ ...req.body, blogId: req.params.id });
+    if (!newPost) {
         return res.status(404).json({ errorsMessages: [{ message: 'Blog not found', field: 'blogId' }] })
     }
     return res
     .status(201)
-    .json(mapToBlogViewModel(newBlog))
+    .json(mapToPostViewModel(newPost));
 }

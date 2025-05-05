@@ -1,7 +1,8 @@
-import { ObjectId, WithId } from "mongodb";
+import { ObjectId, SortDirection, WithId } from "mongodb";
 import { PostDbType, db } from "../../db"
 import { PostInputModel } from "../../models"
 import { blogsCollection, postsCollection } from "../../utils/db";
+import { sortDirections } from "../../constants";
 
 export const postsRepository = {
   async create(post: PostInputModel) {
@@ -22,8 +23,19 @@ export const postsRepository = {
   async find(id: string) {
       return postsCollection.findOne({ _id: new ObjectId(id)});
   },
-  async getAll() {
-    return postsCollection.find().toArray();
+  async findByParamsFromBlog(id: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
+    const posts = await postsCollection.find({ blogId: id })
+    .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize).toArray();
+
+    return posts;
+  },
+  async getAll(pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
+    return postsCollection.find()
+    .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize).toArray();
   },
   async del(id: string) {
     return postsCollection.deleteOne({ _id: new ObjectId(id)});

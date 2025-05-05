@@ -1,7 +1,8 @@
-import { BlogDbType, db } from "../../db"
-import { BlogInputModel, BlogViewModel } from "../../models"
-import { blogsCollection } from "../../utils/db"
-import { ObjectId, WithId } from 'mongodb';
+import { sortDirections } from "../../constants";
+import { BlogDbType, PostDbType } from "../../db"
+import { BlogInputModel } from "../../models"
+import { blogsCollection, postsCollection } from "../../utils/db"
+import { ObjectId, SortDirection, WithId } from 'mongodb';
 
 export const blogsRepository = {
   async create(blog: BlogInputModel): Promise<WithId<BlogDbType>> {
@@ -19,11 +20,17 @@ export const blogsRepository = {
   async findOne(id: string): Promise<WithId<BlogDbType> | null> {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
+  async findAllPosts(id: string): Promise<Array<WithId<PostDbType>>> {
+    return postsCollection.find({ blogId: id }).toArray();
+  },
   async findAndMap(id: string): Promise<WithId<BlogDbType> | null> {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
-  async getAll() {
-    return blogsCollection.find().toArray();
+  async getAll(searchNameTerm: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
+    return blogsCollection.find({ name: { $regex: searchNameTerm, $options: 'i' }})
+    .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize).toArray();
   },
   async del(id: string) {
     return blogsCollection.deleteOne({ _id: new ObjectId(id) });
