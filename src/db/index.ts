@@ -1,3 +1,5 @@
+import { BlogViewModel, PostViewModel } from "../models"
+
 export type PostDbType = {
   title: string // max 30
   shortDescription: string // max 100
@@ -46,4 +48,20 @@ export const setDB = (dataset?: Partial<ReadonlyDBType>) => {
     db.blogs = dataset.blogs?.map(b => ({...b})) || db.blogs
     db.posts = dataset.posts?.map(p => ({...p})) || db.posts
     // db.some = dataset.some?.map(s => ({...s})) || db.some
+}
+
+export interface BlogsWithPagination {
+    items: BlogViewModel[];
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+}
+
+export interface PostsWithPagination {
+    items: PostViewModel[];
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
 }

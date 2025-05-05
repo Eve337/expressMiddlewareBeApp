@@ -27,10 +27,18 @@ export const blogsRepository = {
     return blogsCollection.findOne({ _id: new ObjectId(id) });
   },
   async getAll(searchNameTerm: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
-    return blogsCollection.find({ name: { $regex: searchNameTerm, $options: 'i' }})
+    const entities = await blogsCollection.find({ name: { $regex: searchNameTerm, $options: 'i' }})
     .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize).toArray();
+    const totalCount = await blogsCollection.countDocuments();
+    return {
+      pagesCount: Math.ceil(totalCount / pageSize),
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      items: entities,
+    }
   },
   async del(id: string) {
     return blogsCollection.deleteOne({ _id: new ObjectId(id) });

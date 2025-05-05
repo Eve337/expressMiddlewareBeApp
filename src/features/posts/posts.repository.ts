@@ -28,14 +28,28 @@ export const postsRepository = {
     .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize).toArray();
-
-    return posts;
+    const totalCount = await postsCollection.countDocuments({ blogId: id });
+    return {
+      pagesCount: Math.ceil(totalCount / pageSize),
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      items: posts
+    };
   },
   async getAll(pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
-    return postsCollection.find()
+    const entities = await postsCollection.find()
     .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize).toArray();
+    const totalCount = await postsCollection.countDocuments();
+    return {
+      pagesCount: Math.ceil(totalCount / pageSize),
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      items: entities
+    }
   },
   async del(id: string) {
     return postsCollection.deleteOne({ _id: new ObjectId(id)});
