@@ -31,7 +31,7 @@ export const blogsRepository = {
     .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize).toArray();
-    const totalCount = await blogsCollection.countDocuments();
+    const totalCount = await blogsCollection.countDocuments({ name: { $regex: searchNameTerm, $options: 'i' }});
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
