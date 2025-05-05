@@ -41,3 +41,9 @@ export const postValidators = [
   blogIdValidator,
 ];
 
+export const postFromBlogValidators = [
+  adminMiddleware,
+  titleValidator,
+  shortDescriptionValidator,
+  contentValidator,
+];
