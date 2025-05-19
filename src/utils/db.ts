@@ -4,6 +4,7 @@ import { SETTINGS } from "../settings/settings"
 import { CollectionNames } from "../constants"
 import { BlogViewModel, PostViewModel } from "../models"
 import { BlogDbType, PostDbType } from "../db"
+import { UserDB } from "../features/users/types/userDb.interface"
 
 dotenv.config();
 if (!process.env.MONGO_URL) {
@@ -19,6 +20,7 @@ export const db = client.db(SETTINGS.DB_NAME);
 
 export const blogsCollection = db.collection<BlogDbType>(CollectionNames.BLOGS);
 export const postsCollection = db.collection<PostDbType>(CollectionNames.POSTS);
+export const usersCollection = db.collection<UserDB>(CollectionNames.USERS);
 
 export const runDB = async () => {
     try {

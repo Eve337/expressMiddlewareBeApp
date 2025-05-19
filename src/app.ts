@@ -5,6 +5,8 @@ import { blogsRouter } from './features/blogs';
 import { postsRouter } from './features/posts';
 import { testDataRouter } from './features/testingDataRouter';
 import { errorHandler } from './middlewares/error.middleware';
+import { usersRouter } from './features/users';
+import { authRouter } from './features/auth';
 
 export const app = express()
 
@@ -17,4 +19,6 @@ app.get('/', (req, res) => {
 app.use(routes.BLOGS, blogsRouter);
 app.use(routes.POSTS, postsRouter);
 app.use(routes.TESTING, testDataRouter);
+app.use(routes.USERS, usersRouter);
+app.use(routes.AUTH, authRouter);
 app.use(errorHandler);
