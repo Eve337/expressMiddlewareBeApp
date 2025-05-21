@@ -11,7 +11,7 @@ if (!process.env.MONGO_URL) {
   throw new Error('MONGO_URL environment variable is not set');
 }
 
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+const mongoURI = 'mongodb://0.0.0.0:27017' //process.env.MONGO_URL ||
 
 console.log(mongoURI)
 

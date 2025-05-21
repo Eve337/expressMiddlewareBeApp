@@ -4,14 +4,9 @@ import { bcryptService } from "../../../utils/auth";
 
 export const loginController = async (req: Request<any, any, { loginOrEmail: string, password: string }>, res: Response) => {
     const { loginOrEmail, password } = req.body;
-    
     const currentUser = await usersQueryRepository.findByEmailOrLogin(loginOrEmail);
-
-    if (!currentUser) return res.send().status(404);
-
-    const comparePasswords = bcryptService.checkPassword(password, currentUser.passwordHash);
-
-    if (!comparePasswords) return res.send().status(401);
-
-    return res.send().status(204);
+    if (!currentUser) return res.status(404).send();
+    const comparePasswords = await bcryptService.checkPassword(password, currentUser.passwordHash);
+    if (!comparePasswords) return res.status(401).send();
+    return res.status(204).send();
 }

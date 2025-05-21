@@ -5,10 +5,10 @@ import { body } from "express-validator";
 export const checkAuthInputModel = async (req: Request<any, any, AuthInputDTO>, res: Response, next: NextFunction) => {
 
     if (!req.body.loginOrEmail || !req.body.password) {
-        res.status(400).send('inputModel has incorrect values');
-        return;
+        return res.status(400).send('inputModel has incorrect values')
     }
     next();
+    return;
 };
 
 export const loginOrEmailValidator = body('loginOrEmail').isString().withMessage(() => ({ field: 'name', message: 'not string' })).bail()

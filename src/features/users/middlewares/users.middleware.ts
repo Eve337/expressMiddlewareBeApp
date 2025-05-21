@@ -17,7 +17,7 @@ export const findUserValidator = async (req: Request, res: Response, next: NextF
         res.status(404).send('Entity not found');
         return;
     }
-    next();
+    next()
 };
 
 export const userValidators = [

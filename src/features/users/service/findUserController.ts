@@ -12,5 +12,6 @@ export const findUserController = async (req: Request, res: Response<any>) => {
     if(!entities) {
         return res.status(404);
     }
+    console.log('here')
     return res.status(200).json(entities);
 }

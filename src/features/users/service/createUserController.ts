@@ -23,7 +23,7 @@ export const createUserController =  async (req: Request<any, any, CreateUserDto
     const isUserAlreadyExist = await usersQueryRepository.findByEmailOrLogin(email, login);
     if (isUserAlreadyExist) {
         return res.status(401).json({
-            errorsMessages: [{field: 'email', message: 'email should be unique'}]
+            errorsMessages: [{field: 'email', message: 'email and login should be unique'}]
         })
     }
     
