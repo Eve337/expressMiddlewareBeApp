@@ -7,7 +7,12 @@ import { UserView } from "../types/userView.interface";
 
 export const usersQueryRepository = {
     async getAll(searchLoginTerm: string, searchEmailTerm: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
-        const entities = await usersCollection.find({ login: { $regex: searchLoginTerm }, email: { $regex: searchEmailTerm }})
+        const entities = await usersCollection.find({
+          $or: [
+            { login: { $regex: searchLoginTerm }},
+            { email: { $regex: searchEmailTerm } }
+          ]
+      })
         .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize).toArray();
