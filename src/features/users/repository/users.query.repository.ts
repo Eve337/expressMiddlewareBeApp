@@ -16,7 +16,12 @@ export const usersQueryRepository = {
         .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize).toArray();
-        const totalCount = await usersCollection.countDocuments({ login: { $regex: searchLoginTerm }, email: { $regex: searchEmailTerm }});
+        const totalCount = await usersCollection.countDocuments({
+          $or: [
+            { login: { $regex: searchLoginTerm }},
+            { email: { $regex: searchEmailTerm } }
+          ]
+      });
         return {
           pagesCount: Math.ceil(totalCount / pageSize),
           page: pageNumber,
