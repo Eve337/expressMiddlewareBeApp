@@ -9,7 +9,7 @@ export const usersQueryRepository = {
     async getAll(searchLoginTerm: string, searchEmailTerm: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
         const entities = await usersCollection.find({
           $and: [
-            { login: { $regex: new RegExp(searchLoginTerm, 'i ') }},
+            { login: { $regex: new RegExp(searchLoginTerm, 'i') }},
             { email: { $regex: new RegExp(searchEmailTerm, 'i') } }
           ]
       })
@@ -18,7 +18,7 @@ export const usersQueryRepository = {
         .limit(pageSize).toArray();
         const totalCount = await usersCollection.countDocuments({
           $and: [
-            { login: { $regex: new RegExp(searchLoginTerm, 'i ') }},
+            { login: { $regex: new RegExp(searchLoginTerm, 'i') }},
             { email: { $regex: new RegExp(searchEmailTerm, 'i') } }
           ]
       });
