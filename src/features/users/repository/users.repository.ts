@@ -18,5 +18,9 @@ export const usersRepository = {
 
     async delete (id: string) {
         return usersCollection.deleteOne({ _id: new ObjectId(id) })
+    },
+
+    async deleteAll () {
+        return usersCollection.deleteMany()
     }
 }

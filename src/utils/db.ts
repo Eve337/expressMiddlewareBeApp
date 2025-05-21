@@ -12,9 +12,6 @@ if (!process.env.MONGO_URL) {
 }
 
 const mongoURI = process.env.MONGO_URL;
-
-console.log(mongoURI)
-
 const client = new MongoClient(mongoURI);
 export const db = client.db(SETTINGS.DB_NAME);
 

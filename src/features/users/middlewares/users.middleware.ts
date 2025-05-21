@@ -20,6 +20,16 @@ export const findUserValidator = async (req: Request, res: Response, next: NextF
     next()
 };
 
+export const validateObjectIdMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+        return res.status(400).json({ message: 'Invalid ObjectId format' });
+    }
+
+    next();
+};
+
 export const userValidators = [
   adminMiddleware,
   loginValidator,
