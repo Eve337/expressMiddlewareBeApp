@@ -7,10 +7,20 @@ import { UserView } from "../types/userView.interface";
 
 export const usersQueryRepository = {
     async getAll(searchLoginTerm: string, searchEmailTerm: string, pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = 'desc') {
+        const filter: { login?: { $regex: RegExp; }, email?: { $regex: RegExp; } } = {};
+
+        if (searchLoginTerm?.trim()) {
+          filter.login = { $regex: new RegExp(searchLoginTerm.trim(), 'i') };
+        }
+
+        if (searchEmailTerm?.trim()) {
+          filter.email = { $regex: new RegExp(searchEmailTerm.trim(), 'i') };
+        }
+
         const entities = await usersCollection.find({
           $and: [
-            { login: { $regex: new RegExp(searchLoginTerm, 'i') }},
-            { email: { $regex: new RegExp(searchEmailTerm, 'i') } }
+            { login: filter.login },
+            { email: filter.email, }
           ]
       })
         .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
@@ -18,8 +28,8 @@ export const usersQueryRepository = {
         .limit(pageSize).toArray();
         const totalCount = await usersCollection.countDocuments({
           $and: [
-            { login: { $regex: new RegExp(searchLoginTerm, 'i') }},
-            { email: { $regex: new RegExp(searchEmailTerm, 'i') } }
+            { login: filter.login },
+            { email: filter.email, }
           ]
       });
         return {
