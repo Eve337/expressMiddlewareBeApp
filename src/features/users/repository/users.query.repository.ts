@@ -14,28 +14,36 @@ export const usersQueryRepository = {
     sortBy = 'createdAt',
     sortDirection = 'desc'
   ) {
-    const filter: any = {};
+    const filter: any = {
+      login: {},
+      email: {},
+    };
   
-    // Case-insensitive regex for login
+    // Escape special regex characters in user input
+    console.log(searchLoginTerm, 123)
     if (searchLoginTerm?.trim()) {
-      filter.login = { $regex: new RegExp(searchLoginTerm.trim(), 'i') };
+      const safeTerm = searchLoginTerm.toLowerCase().trim();
+      filter.login = { login: {$regex: new RegExp(safeTerm, 'i') }};
     }
   
-    // Case-insensitive regex for email
     if (searchEmailTerm?.trim()) {
-      filter.email = { $regex: new RegExp(searchEmailTerm.trim(), 'i') };
+      const safeTerm = searchEmailTerm.toLowerCase().trim();
+      filter.email = { email: { $regex: new RegExp(safeTerm, 'i') }};
     }
-  
-    // Fetch paginated data
+
+    console.log(filter)
     const entities = await usersCollection
-      .find(filter)
+      .find({
+        $or: [filter.login, filter.email]
+    })
       .sort({ [sortBy]: sortDirections[sortDirection] as SortDirection })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .toArray();
   
-    // Count total matching documents
-    const totalCount = await usersCollection.countDocuments(filter);
+    const totalCount = await usersCollection.countDocuments({
+      $or: [filter.login, filter.email]
+  });
   
     return {
       pagesCount: Math.ceil(totalCount / pageSize),

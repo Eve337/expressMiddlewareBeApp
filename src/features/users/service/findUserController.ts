@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { usersQueryRepository } from "../repository/users.query.repository";
 
 export const findUserController = async (req: Request, res: Response<any>) => {
-    const searchLoginTerm = req.query.searchNameTerm ? String(req.query.searchLoginTerm) : '';
+    const searchLoginTerm = req.query.searchLoginTerm ? String(req.query.searchLoginTerm) : '';
     const searchEmailTerm = req.query.searchEmailTerm ? String(req.query.searchEmailTerm) : '';
     const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
     const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
