@@ -1,5 +1,4 @@
 import { ObjectId, SortDirection, WithId } from "mongodb";
-import { CreateUserDto } from "../types/create-user.dto";
 import { UserDB } from "../types/userDb.interface";
 import { usersCollection } from "../../../utils/db";
 import { sortDirections } from "../../../constants";
@@ -19,8 +18,6 @@ export const usersQueryRepository = {
       email: {},
     };
   
-    // Escape special regex characters in user input
-    console.log(searchLoginTerm, 123)
     if (searchLoginTerm?.trim()) {
       const safeTerm = searchLoginTerm.toLowerCase().trim();
       filter.login = { login: {$regex: new RegExp(safeTerm, 'i') }};
@@ -31,7 +28,6 @@ export const usersQueryRepository = {
       filter.email = { email: { $regex: new RegExp(safeTerm, 'i') }};
     }
 
-    console.log(filter)
     const entities = await usersCollection
       .find({
         $or: [filter.login, filter.email]

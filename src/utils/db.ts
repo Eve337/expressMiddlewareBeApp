@@ -2,9 +2,9 @@ import { MongoClient } from "mongodb"
 import dotenv from 'dotenv'
 import { SETTINGS } from "../settings/settings"
 import { CollectionNames } from "../constants"
-import { BlogViewModel, PostViewModel } from "../models"
 import { BlogDbType, PostDbType } from "../db"
 import { UserDB } from "../features/users/types/userDb.interface"
+import { CommentDB } from "../features/comments/types/commentDb.interface"
 
 dotenv.config();
 if (!process.env.MONGO_URL) {
@@ -18,6 +18,7 @@ export const db = client.db(SETTINGS.DB_NAME);
 export const blogsCollection = db.collection<BlogDbType>(CollectionNames.BLOGS);
 export const postsCollection = db.collection<PostDbType>(CollectionNames.POSTS);
 export const usersCollection = db.collection<UserDB>(CollectionNames.USERS);
+export const commentsCollection = db.collection<CommentDB>(CollectionNames.COMMENTS);
 
 export const runDB = async () => {
     try {
@@ -27,6 +28,8 @@ export const runDB = async () => {
         console.log('connection failed')
     }
 }
+
+export const shutdownDB = async () => client.close();
 
 process.on('SIGTERM', () => {
   console.log('SIGTERM received. Shutting down gracefully');

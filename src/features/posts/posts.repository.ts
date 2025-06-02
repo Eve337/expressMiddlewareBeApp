@@ -17,7 +17,6 @@ export const postsRepository = {
         createdAt: new Date().toISOString(),
     }
     const postDbEntity = await postsCollection.insertOne(newPost);
-    console.log(postDbEntity.insertedId);
     return { ...newPost, _id: postDbEntity.insertedId };
   },
   async find(id: string) {

@@ -11,7 +11,7 @@ export const usersRepository = {
             passwordHash: dto.password,
             createdAt: new Date(),
         }
-        const userEntity = await usersCollection.insertOne(newUser)
+        const userEntity = await usersCollection.insertOne(newUser);
     
         return { ...newUser, _id: userEntity.insertedId }
     },

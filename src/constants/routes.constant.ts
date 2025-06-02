@@ -4,4 +4,5 @@ export const routes = {
   TESTING: '/testing',
   USERS: '/users',
   AUTH: '/auth',
+  COMMENTS: '/comments',
 }

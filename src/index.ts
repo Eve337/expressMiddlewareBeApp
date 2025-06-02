@@ -1,13 +1,17 @@
-import { app } from "./app";
+import { initApp } from "./app";
 import { runDB } from "./utils/db";
 
+const app = initApp();
 
-const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3003;
+const startApp = () => {
+    const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3003;
+    runDB();
 
-app.listen(PORT, () => {
-    console.log('...server started in port ' + PORT)
-})
+    app.listen(PORT, () => {
+        console.log('...server started in port ' + PORT)
+    })
 
-runDB();
+}
 
+startApp();
 

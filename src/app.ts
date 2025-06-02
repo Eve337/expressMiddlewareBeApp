@@ -7,18 +7,26 @@ import { testDataRouter } from './features/testingDataRouter';
 import { errorHandler } from './middlewares/error.middleware';
 import { usersRouter } from './features/users';
 import { authRouter } from './features/auth';
+import { commentsRouter } from './features/comments';
 
-export const app = express()
 
-app.use(express.json());
-app.use(cors());
-app.get('/', (req, res) => {
-  res.status(200).json({version: '1.0'});
-});
 
-app.use(routes.BLOGS, blogsRouter);
-app.use(routes.POSTS, postsRouter);
-app.use(routes.TESTING, testDataRouter);
-app.use(routes.USERS, usersRouter);
-app.use(routes.AUTH, authRouter);
-app.use(errorHandler);
+export const initApp = () => {
+  const app = express()
+  
+  app.use(express.json());
+  app.use(cors());
+  app.get('/', (req, res) => {
+    res.status(200).json({version: '1.0'});
+  });
+
+  app.use(routes.BLOGS, blogsRouter);
+  app.use(routes.POSTS, postsRouter);
+  app.use(routes.TESTING, testDataRouter);
+  app.use(routes.USERS, usersRouter);
+  app.use(routes.AUTH, authRouter);
+  app.use(routes.COMMENTS, commentsRouter);
+  app.use(errorHandler);
+
+  return app;
+}

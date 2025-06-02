@@ -28,10 +28,10 @@ export const validateObjectIdMiddleware = (req: Request, res: Response, next: Ne
     }
 
     next();
+    return;
 };
 
 export const userValidators = [
-  adminMiddleware,
   loginValidator,
   passwordValidator,
   emailValidator,
