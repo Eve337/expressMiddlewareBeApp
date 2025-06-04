@@ -21,14 +21,13 @@ export const checkAuthHeader = async (req: Request, res: Response, next: NextFun
     if (!req.headers.authorization) {
         return res.status(401).send();
     }
-    console.log(1)
-    const [typeAuth, token] = req.headers.authorization.split(" ")[0];
-    console.log(req.headers.authorization);
+
+    const [typeAuth, token] = req.headers.authorization.split(" ");
+
     if (!typeAuth || !token) {
         return res.status(401).send();
         
     }
-    console.log(2)
 
     const verifiedToken = jwtService.verifyToken(token);
     if (verifiedToken) {

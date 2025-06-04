@@ -41,19 +41,18 @@ export const CommentsQueryRepository ={
         const totalCount = await commentsCollection.countDocuments({
           postId
         });
-      
+
         return {
           pagesCount: Math.ceil(totalCount / pageSize),
           page: pageNumber,
           pageSize: pageSize,
           totalCount: totalCount,
-          items: entities.map(this._getInView),
+          items: await Promise.all(entities.map(this._getInView)),
         };
     },
 
     async _getInView({ _id, commentatorId, content, createdAt }: WithId<CommentDB>) {
         const user = await usersQueryRepository.findById(commentatorId);
-
         return {
             id: String(_id),
             createdAt,

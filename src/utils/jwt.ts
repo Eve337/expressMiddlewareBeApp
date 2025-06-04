@@ -8,14 +8,13 @@ export const jwtService = {
     createAccessToken (userId: string) {
         return jwt.sign({
             userId
-          }, appConfig.AC_SECRET, { expiresIn: '86400' });
+          }, appConfig.AC_SECRET, { expiresIn: '1d' });
     },
     verifyToken (token: string) {
         try {
-            console.log(token, 3)
             return jwt.verify(token, appConfig.AC_SECRET) as { userId: string };
-        } catch {
-            console.log('cant verify token')
+        } catch (e) {
+            console.log('cant verify token', e)
             return null;
         }
         
