@@ -9,5 +9,5 @@ import { deleteAllUsersController } from './service/deleteAllUsers';
 export const usersRouter = Router()
 
 usersRouter.get('/', findUserController);
-usersRouter.post('/',userValidators, createUserController);
+usersRouter.post('/',userValidators, adminMiddleware, createUserController);
 usersRouter.delete('/:id',validateObjectIdMiddleware, findUserValidator, adminMiddleware, deleteUserController);
